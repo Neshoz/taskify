@@ -1,0 +1,53 @@
+version: "3.8"
+services:
+  nginx:
+    container_name: nginx
+    build:
+      context: .
+      dockerfile: ./nginx/Dockerfile
+    ports:
+      - 80:80
+
+  account-service:
+    container_name: account-service
+    env_file:
+      - ./packages/account-service/.env
+    build:
+      context: .
+      dockerfile: ./packages/account-service/Dockerfile
+    ports:
+      - 8001:8001
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  task-service:
+    container_name: task-service
+    build:
+      context: .
+      dockerfile: ./packages/task-service/Dockerfile
+    ports:
+      - 8002:8002
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  postgres:
+    container_name: postgres
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=root
+      - POSTGRES_DB=taskify
+    build:
+      context: ./packages/db/
+      dockerfile: Dockerfile
+    healthcheck:
+      test: ["CMD", "pg_isready", "-q", "-d", "taskify", "-U", "postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - ./packages/db/dumps/:/docker-entrypoint/initdb.d/
+
+volumes:
+  dumps:
