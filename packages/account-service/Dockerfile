@@ -9,9 +9,11 @@ COPY package.json .
 COPY tsconfig.node.json .
 COPY yarn.lock .
 
-COPY ./packages/account-service packages/account-service
+COPY ./packages/account-service/package.json packages/account-service/
+COPY ./packages/backend-common/package.json packages/backend-common/
 RUN yarn install --network-timeout 1000000
-COPY ./packages/account-service packages/account-service
+COPY ./packages/backend-common packages/backend-common/
+COPY ./packages/account-service packages/account-service/
 RUN yarn workspace @taskify/account-service build;
 
 # Run
