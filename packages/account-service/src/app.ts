@@ -39,7 +39,7 @@ app.use(
     saveUninitialized: false,
     cookie: {
       httpOnly: true,
-      maxAge: 60 * 1000,
+      maxAge: 1000 * 60 * 60 * 24 * 30, // One month
       domain: ".taskify.io",
     },
   })
