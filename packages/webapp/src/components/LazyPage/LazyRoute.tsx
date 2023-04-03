@@ -1,5 +1,5 @@
 import { ComponentType, lazy, Suspense, useMemo } from "react";
-import { RouteProps } from "react-router-dom";
+import { Route, RouteProps } from "react-router-dom";
 import { FullscreenLoader } from "../FullscreenLoader";
 
 export interface RouteConfig {
@@ -9,12 +9,17 @@ export interface RouteConfig {
 
 type Props = Omit<RouteProps, "component"> & RouteConfig;
 
-export const LazyRoute = ({ component, ...rest }: Props) => {
+export const LazyPage = ({ component, ...rest }: Props) => {
   const Component = useMemo(() => lazy(component), []);
 
   return (
-    <Suspense fallback={<FullscreenLoader />}>
-      <Component />
-    </Suspense>
+    <Route
+      {...rest}
+      render={() => (
+        <Suspense fallback={<FullscreenLoader />}>
+          <Component />
+        </Suspense>
+      )}
+    />
   );
 };

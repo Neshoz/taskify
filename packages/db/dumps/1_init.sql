@@ -51,7 +51,7 @@ CREATE TABLE IF NOT EXISTS collection.list_user
   list_id uuid NOT NULL,
   user_id uuid NOT NULL,
   CONSTRAINT list_user_pkey PRIMARY KEY (list_id, user_id),
-  CONSTRAINT list_fkey FOREIGN KEY(list_id) REFERENCES collection.list(id),
+  CONSTRAINT list_fkey FOREIGN KEY(list_id) REFERENCES collection.list(id) ON DELETE CASCADE,
   CONSTRAINT user_fkey FOREIGN KEY(user_id) REFERENCES account.user(id) ON DELETE CASCADE
 );
 

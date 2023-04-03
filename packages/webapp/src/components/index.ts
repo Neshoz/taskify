@@ -1,2 +1,2 @@
 export * from "./FullscreenLoader";
-export * from "./LazyRoute";
+export * from "./LazyPage";
