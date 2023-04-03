@@ -11,7 +11,11 @@ interface Props {
 
 export const Root = ({ children }: Props) => (
   <QueryClientProvider client={queryClient}>
-    <MantineProvider withGlobalStyles withNormalizeCSS>
+    <MantineProvider
+      theme={{ colorScheme: "dark" }}
+      withGlobalStyles
+      withNormalizeCSS
+    >
       <AuthProvider>
         <Notifications />
         {children}
