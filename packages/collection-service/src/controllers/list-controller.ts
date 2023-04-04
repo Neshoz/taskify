@@ -1,10 +1,11 @@
 import { NextFunction, Response } from "express";
 import { ApiError, ApiRequest } from "@taskify/backend-common";
+import { ApiList } from "@taskify/shared-service-types";
 import * as listService from "../services/list-service";
 
 export async function getLists(
   req: ApiRequest,
-  res: Response,
+  res: Response<ApiList[]>,
   next: NextFunction
 ) {
   try {
@@ -17,7 +18,7 @@ export async function getLists(
 
 export async function getList(
   req: ApiRequest,
-  res: Response,
+  res: Response<ApiList>,
   next: NextFunction
 ) {
   try {
@@ -37,7 +38,7 @@ export async function getList(
 
 export async function createList(
   req: ApiRequest,
-  res: Response,
+  res: Response<ApiList>,
   next: NextFunction
 ) {
   try {
@@ -48,7 +49,7 @@ export async function createList(
 
 export async function updateList(
   req: ApiRequest,
-  res: Response,
+  res: Response<ApiList>,
   next: NextFunction
 ) {
   try {

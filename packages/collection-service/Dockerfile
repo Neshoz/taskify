@@ -9,9 +9,11 @@ COPY package.json .
 COPY tsconfig.node.json .
 COPY yarn.lock .
 
+COPY ./packages/shared-service-types/package.json packages/shared-service-types/
 COPY ./packages/collection-service/package.json packages/collection-service/
 COPY ./packages/backend-common/package.json packages/backend-common/
 RUN yarn install --network-timeout 1000000
+COPY ./packages/shared-service-types packages/shared-service-types/
 COPY ./packages/backend-common packages/backend-common/
 COPY ./packages/collection-service packages/collection-service/
 RUN yarn workspace @taskify/collection-service build;

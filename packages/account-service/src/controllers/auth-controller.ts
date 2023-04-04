@@ -4,12 +4,13 @@ import {
   AuthenticationError,
   InvalidCredentialsError,
 } from "@taskify/backend-common";
+import { ApiSession, ApiUser } from "@taskify/shared-service-types";
 import * as authService from "../services/auth-service";
 import * as userService from "../services/user-service";
 
 export async function signInUser(
   req: Request,
-  res: Response,
+  res: Response<ApiUser>,
   next: NextFunction
 ) {
   try {
@@ -39,7 +40,7 @@ export async function signInUser(
 
 export async function getSession(
   req: Request,
-  res: Response,
+  res: Response<ApiSession>,
   next: NextFunction
 ) {
   if (!req.session.userId) {

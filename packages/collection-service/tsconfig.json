@@ -6,5 +6,8 @@
   },
   "include": ["./src/**/*"],
   "exclude": ["node_modules/**/*"],
-  "references": [{ "path": "../backend-common" }]
+  "references": [
+    { "path": "../backend-common" },
+    { "path": "../shared-service-types" }
+  ]
 }

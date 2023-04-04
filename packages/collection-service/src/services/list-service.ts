@@ -1,9 +1,9 @@
 import { ApiError, db } from "@taskify/backend-common";
+import { ApiList } from "@taskify/shared-service-types";
 import SQL from "sql-template-strings";
-import { ListDao } from "../types";
 
-export async function getLists(userId: string): Promise<ListDao[]> {
-  const result = await db.query<ListDao>(
+export async function getLists(userId: string): Promise<ApiList[]> {
+  const result = await db.query<ApiList>(
     SQL`
       SELECT
         id,
@@ -26,8 +26,8 @@ export async function getLists(userId: string): Promise<ListDao[]> {
 export async function getList(
   userId: string,
   listId: string
-): Promise<ListDao> {
-  const result = await db.query<ListDao>(
+): Promise<ApiList> {
+  const result = await db.query<ApiList>(
     SQL`
       SELECT
         id,

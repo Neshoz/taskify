@@ -1,0 +1,8 @@
+{
+  "compilerOptions": {
+    "outDir": "./build",
+    "rootDir": "./src",
+    "composite": true
+  },
+  "include": ["./src/**/*"]
+}

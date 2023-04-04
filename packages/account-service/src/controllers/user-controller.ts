@@ -1,9 +1,10 @@
 import { NextFunction, Request, Response } from "express";
+import { ApiUser } from "@taskify/shared-service-types";
 import * as userService from "../services/user-service";
 
 export async function getSessionUser(
   req: Request,
-  res: Response,
+  res: Response<ApiUser>,
   next: NextFunction
 ) {
   try {
