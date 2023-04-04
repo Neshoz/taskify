@@ -1,4 +1,4 @@
-import { BrowserRouter, Link, Redirect, Route, Switch } from "react-router-dom";
+import { BrowserRouter, Redirect, Switch } from "react-router-dom";
 import { LazyPage } from "~/components";
 import { routes } from "./routes";
 

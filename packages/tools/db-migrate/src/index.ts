@@ -40,11 +40,11 @@ function getMigrationsInOrder(fromVersion?: number): File[] {
   }
 
   if (sortedFiles.length === 0) {
-    console.log("No new migrations found");
+    console.log("No new migrations found.");
     return sortedFiles;
   }
 
-  console.log("New migrations found");
+  console.log("New migrations found.");
   sortedFiles.forEach((file) => console.log(file.filename));
   return sortedFiles;
 }
@@ -118,7 +118,7 @@ async function getLatestVersion(db: pg.Client) {
     console.log(`Latest version is ${version}`);
     return version;
   }
-  console.log("No version found");
+  console.log("No version found.");
 }
 
 console.log("Running migrations...");
@@ -134,11 +134,11 @@ try {
   await sleep(2 * 1000); // Debug purposes
   console.log("Disconnecting from db...");
   await db.end();
-  console.log("Disconnected");
-  console.log("Migrations complete");
+  console.log("Disconnected.");
+  console.log("Migrations complete.");
   process.exit(0);
 } catch (error) {
-  console.log("Something went wrong");
+  console.log("Something went wrong.");
   console.error(error);
   process.exit(1);
 }

@@ -1,4 +1,4 @@
-import { db } from "@taskify/backend-common";
+import { ApiError, db } from "@taskify/backend-common";
 import SQL from "sql-template-strings";
 import { ListDao } from "../types";
 
@@ -26,14 +26,15 @@ export async function getLists(userId: string): Promise<ListDao[]> {
 export async function getList(
   userId: string,
   listId: string
-): Promise<ListDao | undefined> {
+): Promise<ListDao> {
   const result = await db.query<ListDao>(
     SQL`
       SELECT
         id,
         name,
         created,
-        modified
+        modified,
+        permissions
       FROM
         collection.list cl
       INNER JOIN
@@ -45,7 +46,13 @@ export async function getList(
     `
   );
 
-  return result.rows[0];
+  const list = result.rows[0];
+
+  if (!list) {
+    throw new ApiError(400, `No list with id ${listId} found`);
+  }
+
+  return list;
 }
 
 export async function createList(list: any) {}

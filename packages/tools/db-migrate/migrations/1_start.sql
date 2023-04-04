@@ -49,7 +49,7 @@ CREATE TABLE IF NOT EXISTS collection.list_user
   user_id uuid NOT NULL,
   CONSTRAINT list_user_pkey PRIMARY KEY (list_id, user_id),
   CONSTRAINT list_fkey FOREIGN KEY(list_id) REFERENCES collection.list(id) ON DELETE CASCADE,
-  CONSTRAINT user_fkey FOREIGN KEY(user_id) REFERENCES account.user(id) ON DELETE CASCADE
+  CONSTRAINT user_fkey FOREIGN KEY(user_id) REFERENCES account.user(id)
 );
 
 CREATE TRIGGER update_user_modified BEFORE UPDATE ON account.user FOR EACH ROW EXECUTE PROCEDURE update_modified_column();

@@ -28,6 +28,7 @@ export async function getList(
     }
 
     const list = await listService.getList(req.userId!, listId);
+
     res.json(list);
   } catch (error) {
     next(error);
