@@ -4,7 +4,6 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "build": "tsc -b",
     "start": "docker run -d --name postgres-container postgres"
   },
   "dependencies": {},

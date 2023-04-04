@@ -22,6 +22,8 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+      db-migrate:
+        condition: service_completed_successfully
 
   collection-service:
     container_name: collection-service
@@ -34,6 +36,20 @@ services:
       - 8002:8002
     volumes:
       - ./packages/collection-service:/usr/app/packages/collection-service
+    depends_on:
+      postgres:
+        condition: service_healthy
+      db-migrate:
+        condition: service_completed_successfully
+
+  db-migrate:
+    container_name: db-migrate
+    build:
+      context: .
+      dockerfile: ./packages/tools/db-migrate/Dockerfile
+    env_file:
+      - ./packages/tools/db-migrate/.env
+    restart: on-failure:5
     depends_on:
       postgres:
         condition: service_healthy
@@ -50,9 +66,3 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
-    volumes:
-      # Persist data on local machine - ./postgres-data:/var/lib/postgresql/data
-      - ./packages/db/dumps/:/docker-entrypoint/initdb.d/
-
-volumes:
-  dumps:

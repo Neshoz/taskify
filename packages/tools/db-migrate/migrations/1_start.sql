@@ -1,6 +1,3 @@
-SELECT 'CREATE DATABASE taskify'
-WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'taskify')\gexec
-
 CREATE OR REPLACE FUNCTION update_modified_column()
 RETURNS TRIGGER AS $$
 BEGIN
@@ -64,9 +61,6 @@ INSERT INTO account.user (id, email, full_name, password) VALUES ('391811f8-af92
 INSERT INTO collection.list (id, name) VALUES ('b08d1ade-875c-4823-879e-a40345c626c2', 'Nesho test list');
 INSERT INTO collection.list (id, name) VALUES ('7a4d5329-e19f-4528-937a-da073d09f461', 'Simplex test list');
 
-INSERT INTO collection.list_user(list_id, user_id) VALUES('b08d1ade-875c-4823-879e-a40345c626c2', '597a833e-6a22-49d6-bafc-d4c264d7f3f5');
-INSERT INTO collection.list_user(list_id, user_id) VALUES('7a4d5329-e19f-4528-937a-da073d09f461', '391811f8-af92-481f-afd9-fb3bd86aaabc');
-/* Simulate invite to list */
+INSERT INTO collection.list_user(list_id, user_id) VALUES ('b08d1ade-875c-4823-879e-a40345c626c2', '597a833e-6a22-49d6-bafc-d4c264d7f3f5');
+INSERT INTO collection.list_user(list_id, user_id) VALUES ('7a4d5329-e19f-4528-937a-da073d09f461', '391811f8-af92-481f-afd9-fb3bd86aaabc');
 INSERT INTO collection.list_user(list_id, user_id) VALUES ('b08d1ade-875c-4823-879e-a40345c626c2', '391811f8-af92-481f-afd9-fb3bd86aaabc');
-/* Get all users in a list */
-/* SELECT id, email, created, full_name as "fullName" FROM account.user ac LEFT JOIN collection.list_user clu ON ac.id = clu.user_id WHERE list_id = '<list_id>'; */
