@@ -1,16 +1,12 @@
-import { BrowserRouter, Redirect, Switch } from "react-router-dom";
-import { LazyPage } from "~/components";
-import { routes } from "./routes";
+import { AppShell } from "@mantine/core";
+import { BrowserRouter } from "react-router-dom";
+import { AppRoutes } from "./AppRoutes";
+import { Sidebar } from "./components";
 
 export const App = () => (
   <BrowserRouter>
-    <Switch>
-      <LazyPage
-        exact
-        path={routes.dashboard.path}
-        component={routes.dashboard.component}
-      />
-      <Redirect to={routes.dashboard.path} />
-    </Switch>
+    <AppShell navbar={<Sidebar />}>
+      <AppRoutes />
+    </AppShell>
   </BrowserRouter>
 );

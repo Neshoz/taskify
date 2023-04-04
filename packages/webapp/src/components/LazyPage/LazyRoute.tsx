@@ -10,7 +10,7 @@ export interface RouteConfig {
 type Props = Omit<RouteProps, "component"> & RouteConfig;
 
 export const LazyPage = ({ component, ...rest }: Props) => {
-  const Component = useMemo(() => lazy(component), []);
+  const Component = useMemo(() => lazy(component), [rest.path]);
 
   return (
     <Route

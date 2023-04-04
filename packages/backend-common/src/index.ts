@@ -6,7 +6,7 @@ import {
 } from "./errors";
 import { authMiddleware } from "./middlewares/auth-middleware";
 import { errorMiddleware } from "./middlewares/error-middleware";
-import { EntityBase, ApiRequest } from "./types";
+import { ApiRequest } from "./types";
 import { authClient } from "./clients";
 
 export {
@@ -16,7 +16,6 @@ export {
   authMiddleware,
   errorMiddleware,
   db,
-  EntityBase,
   ApiRequest,
   authClient,
 };

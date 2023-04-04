@@ -1,7 +1,7 @@
 import { Center, Title } from "@mantine/core";
 import { useCurrentUserQuery } from "~/feature/user";
 
-const Dashboard = () => {
+const DashboardPage = () => {
   const { data } = useCurrentUserQuery();
 
   return (
@@ -11,4 +11,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default DashboardPage;
