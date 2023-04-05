@@ -36,7 +36,7 @@ export const Sidebar = () => {
             <Link key={item.path} to={item.path}>
               <Tooltip label={item.label} position="right" withArrow>
                 <ActionIcon
-                  color="blue"
+                  color="primary"
                   size="xl"
                   variant={isItemActive(item.path) ? "light" : "subtle"}
                 >

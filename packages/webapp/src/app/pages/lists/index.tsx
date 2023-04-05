@@ -1,8 +1,17 @@
-import { Center, createStyles, Paper, SimpleGrid } from "@mantine/core";
+import {
+  Center,
+  createStyles,
+  Group,
+  Paper,
+  SimpleGrid,
+  Stack,
+  Title,
+} from "@mantine/core";
 import { Link } from "react-router-dom";
 import { routes } from "~/app/routes";
 import { FullscreenLoader } from "~/components";
 import { useListsQuery } from "~/feature/list";
+import { AccessBadge } from "./AccessBadge";
 
 const useStyles = createStyles((theme) => ({
   paper: {
@@ -16,7 +25,6 @@ const useStyles = createStyles((theme) => ({
     textDecoration: "none",
     "&:visited": {
       textDecoration: "none",
-      color: "currentColor",
     },
   },
 }));
@@ -32,9 +40,18 @@ const ListsPage = () => {
   return (
     <SimpleGrid cols={4}>
       {data.map((list) => (
-        <Paper key={list.id} className={classes.paper}>
+        <Paper p="sm" key={list.id} className={classes.paper}>
           <Link to={routes.list.path(list.id)} className={classes.link}>
-            <Center p="xl">{list.name}</Center>
+            <Stack>
+              <Group spacing="xs">
+                {list.permissions.map((p) => (
+                  <AccessBadge key={p} permission={p} />
+                ))}
+              </Group>
+              <Center mb="md">
+                <Title weight={500}>{list.name}</Title>
+              </Center>
+            </Stack>
           </Link>
         </Paper>
       ))}

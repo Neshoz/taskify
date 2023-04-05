@@ -9,7 +9,8 @@ export async function getLists(userId: string): Promise<ApiList[]> {
         id,
         name,
         created,
-        modified
+        modified,
+        permissions
       FROM
         collection.list cl
       INNER JOIN
