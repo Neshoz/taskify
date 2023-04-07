@@ -10,17 +10,17 @@ export async function getLists(userId: string): Promise<ApiList[]> {
         name,
         created,
         modified,
-        permissions
+        permissions,
+        to_json(clm.*) as meta
       FROM
         collection.list cl
-      INNER JOIN
-        collection.list_user clu
-      ON
-        cl.id = clu.list_id
+      INNER JOIN collection.list_user clu ON cl.id = clu.list_id
+      LEFT JOIN collection.list_meta clm ON cl.id = clm.list_id
       WHERE
         clu.user_id = ${userId}
     `
   );
+
   return result.rows;
 }
 
@@ -37,13 +37,12 @@ export async function getList(
         name,
         created,
         modified,
-        permissions
+        permissions,
+        to_json(clm.*) as meta
       FROM
         collection.list cl
-      INNER JOIN
-        collection.list_user clu
-      ON
-        cl.id = clu.list_id
+      INNER JOIN collection.list_user clu ON cl.id = clu.list_id
+      INNER JOIN collection.list_meta clm ON cl.id = clm.list_id
       WHERE
         clu.user_id = ${userId} AND cl.id = ${listId}
     `

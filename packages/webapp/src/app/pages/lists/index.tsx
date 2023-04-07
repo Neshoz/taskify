@@ -6,7 +6,6 @@ import {
   createStyles,
   Grid,
   Group,
-  MantineColor,
   Paper,
   Progress,
   Stack,
@@ -14,23 +13,18 @@ import {
   ThemeIcon,
   Title,
 } from "@mantine/core";
-import { FaBuilding, FaUser, FaShoppingCart, FaChild } from "react-icons/fa";
 import { routes } from "~/app/routes";
 import { FullscreenLoader } from "~/components";
 import { useListsQuery } from "~/feature/list";
-import { IconType } from "react-icons";
+import * as Icons from "react-icons/fa";
 
 const useStyles = createStyles((theme) => ({
   paper: {
     background: theme.colors.dark[5],
     "&:hover": {
-      background: theme.colors.dark[4],
+      background: theme.colors.dark[6],
       cursor: "pointer",
     },
-  },
-  link: {
-    textDecoration: "inherit",
-    color: "inherit",
   },
   title: {
     whiteSpace: "nowrap",
@@ -39,13 +33,6 @@ const useStyles = createStyles((theme) => ({
     color: theme.colors.gray[3],
   },
 }));
-
-const mockListMetaByIndex: Array<{ icon: IconType; color: MantineColor }> = [
-  { icon: FaBuilding, color: "blue" },
-  { icon: FaUser, color: "cyan" },
-  { icon: FaShoppingCart, color: "yellow" },
-  { icon: FaChild, color: "grape" },
-];
 
 const ListsPage = () => {
   const { data = [], isLoading } = useListsQuery();
@@ -59,12 +46,15 @@ const ListsPage = () => {
     <Center w="100%" h="100%">
       <Container w="45%">
         <Grid>
-          {data.map((list, index) => {
-            const { color, icon: Icon } = mockListMetaByIndex[index];
+          {data.map((list) => {
+            // @ts-ignore
+            const Icon = Icons[list.meta?.icon] ?? Icons.FaList;
+            const color = list.meta?.color ?? "gray";
+
             return (
               <Grid.Col key={list.id} span={4}>
                 <Paper p="md" radius="lg" className={classes.paper}>
-                  <Link to={routes.list.path(list.id)} className={classes.link}>
+                  <Link to={routes.list.path(list.id)}>
                     <Stack>
                       <ThemeIcon
                         color={color}
@@ -84,8 +74,8 @@ const ListsPage = () => {
                           {list.name}
                         </Title>
                       </Box>
-                      <Group position="apart">
-                        <Text sx={{ flex: 1 }}>4/8 done</Text>
+                      <Group position="apart" align="center">
+                        <Text>4/8 done</Text>
                         <Progress value={50} color={color} sx={{ flex: 1 }} />
                       </Group>
                     </Stack>

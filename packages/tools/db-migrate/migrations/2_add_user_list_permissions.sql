@@ -1,4 +1,3 @@
-/* CREATE TYPE permission AS ENUM ('list:r', 'list:w'); */
 ALTER TABLE collection.list_user ADD COLUMN IF NOT EXISTS permissions text[] NOT NULL DEFAULT ARRAY['list:r'];
 
 UPDATE collection.list_user SET permissions = ARRAY['list:r', 'list:w'] WHERE user_id = '597a833e-6a22-49d6-bafc-d4c264d7f3f5' AND list_id = 'b08d1ade-875c-4823-879e-a40345c626c2';

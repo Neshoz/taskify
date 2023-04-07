@@ -1,4 +1,4 @@
-import { MdChecklist, MdDashboard } from "react-icons/md";
+import { MdList, MdDashboard } from "react-icons/md";
 import { Link, useLocation } from "react-router-dom";
 import { Group, Header, Title, useMantineTheme } from "@mantine/core";
 import { routes } from "~/app/routes";
@@ -7,12 +7,12 @@ const items = [
   {
     label: "Dashboard",
     path: routes.dashboard.path,
-    icon: MdDashboard,
+    icon: (color: string) => <MdDashboard color={color} size={20} />,
   },
   {
     label: "Lists",
     path: routes.lists.path,
-    icon: MdChecklist,
+    icon: (color: string) => <MdList color={color} size={26} />,
   },
 ];
 
@@ -34,14 +34,11 @@ export const AppHeader = () => {
         {items.map((item) => (
           <Link key={item.path} to={item.path}>
             <Group spacing="xs" align="center">
-              <item.icon
-                size={22}
-                color={
-                  isItemActive(item.path)
-                    ? theme.colors.gray[3]
-                    : theme.colors.gray[6]
-                }
-              />
+              {item.icon(
+                isItemActive(item.path)
+                  ? theme.colors.gray[3]
+                  : theme.colors.gray[6]
+              )}
               <Title
                 order={5}
                 weight={500}

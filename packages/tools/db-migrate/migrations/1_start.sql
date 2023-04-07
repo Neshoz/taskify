@@ -52,6 +52,13 @@ CREATE TABLE IF NOT EXISTS collection.list_user
   CONSTRAINT user_fkey FOREIGN KEY(user_id) REFERENCES account.user(id)
 );
 
+CREATE TABLE IF NOT EXISTS collection.list_meta (
+  list_id uuid NOT NULL,
+  icon character varying(50) NOT NULL,
+  color character varying(50) NOT NULL,
+  CONSTRAINT list_fkey FOREIGN KEY(list_id) REFERENCES collection.list(id) ON DELETE CASCADE 
+);
+
 CREATE TRIGGER update_user_modified BEFORE UPDATE ON account.user FOR EACH ROW EXECUTE PROCEDURE update_modified_column();
 CREATE TRIGGER update_list_modified BEFORE UPDATE ON collection.list FOR EACH ROW EXECUTE PROCEDURE update_modified_column();
 
@@ -64,3 +71,6 @@ INSERT INTO collection.list (id, name) VALUES ('7a4d5329-e19f-4528-937a-da073d09
 INSERT INTO collection.list_user(list_id, user_id) VALUES ('b08d1ade-875c-4823-879e-a40345c626c2', '597a833e-6a22-49d6-bafc-d4c264d7f3f5');
 INSERT INTO collection.list_user(list_id, user_id) VALUES ('7a4d5329-e19f-4528-937a-da073d09f461', '391811f8-af92-481f-afd9-fb3bd86aaabc');
 INSERT INTO collection.list_user(list_id, user_id) VALUES ('b08d1ade-875c-4823-879e-a40345c626c2', '391811f8-af92-481f-afd9-fb3bd86aaabc');
+
+INSERT INTO collection.list_meta(list_id, icon, color) VALUES ('b08d1ade-875c-4823-879e-a40345c626c2', 'FaUser', 'cyan');
+INSERT INTO collection.list_meta(list_id, icon, color) VALUES ('7a4d5329-e19f-4528-937a-da073d09f461', 'FaUser', 'cyan');
