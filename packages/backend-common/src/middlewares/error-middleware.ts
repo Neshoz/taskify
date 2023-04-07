@@ -4,6 +4,7 @@ import {
   InvalidCredentialsError,
   ClientError,
   ApiError,
+  AuthorizationError,
 } from "../errors";
 
 export function errorMiddleware(
@@ -19,6 +20,8 @@ export function errorMiddleware(
   switch (error.constructor) {
     case AuthenticationError:
       return response.status(401).json({ message: "Authentication required" });
+    case AuthorizationError:
+      return response.status(403).json({ message: error.message });
     case InvalidCredentialsError:
       return response.status(400).json({ message: "Invalid credentials" });
     case ClientError:

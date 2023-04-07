@@ -1,6 +1,7 @@
 import { db } from "./db";
 import {
   AuthenticationError,
+  AuthorizationError,
   InvalidCredentialsError,
   ApiError,
 } from "./errors";
@@ -11,6 +12,7 @@ import { authClient } from "./clients";
 
 export {
   AuthenticationError,
+  AuthorizationError,
   ApiError,
   InvalidCredentialsError,
   authMiddleware,

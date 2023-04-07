@@ -12,7 +12,16 @@ interface Props {
 export const Root = ({ children }: Props) => (
   <QueryClientProvider client={queryClient}>
     <MantineProvider
-      theme={{ colorScheme: "dark", primaryColor: "blue" }}
+      theme={{
+        colorScheme: "dark",
+        primaryColor: "blue",
+        globalStyles: (theme) => ({
+          a: {
+            textDecoration: "inherit",
+            color: "inherit",
+          },
+        }),
+      }}
       withGlobalStyles
       withNormalizeCSS
     >

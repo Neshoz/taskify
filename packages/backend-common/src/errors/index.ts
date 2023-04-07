@@ -1,5 +1,6 @@
 export class InvalidCredentialsError extends Error {}
 export class AuthenticationError extends Error {}
+export class AuthorizationError extends Error {}
 
 export class ClientError extends Error {
   public status: number;
