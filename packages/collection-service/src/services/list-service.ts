@@ -1,5 +1,9 @@
 import { ApiError, AuthorizationError, db } from "@taskify/backend-common";
-import { ApiList, ListPermission } from "@taskify/shared-service-types";
+import {
+  ApiList,
+  CreateListInput,
+  ListPermission,
+} from "@taskify/shared-service-types";
 import SQL from "sql-template-strings";
 
 export async function getLists(userId: string): Promise<ApiList[]> {
@@ -53,9 +57,10 @@ export async function getList(
 
 export async function createList(
   userId: string,
-  name: string
+  input: CreateListInput
 ): Promise<ApiList> {
   try {
+    const { name, meta } = input;
     await db.query(SQL`BEGIN`);
 
     const result = await db.query<ApiList>(
@@ -69,6 +74,15 @@ export async function createList(
     );
 
     const list = result.rows[0];
+
+    await db.query(
+      SQL`
+        INSERT INTO
+          collection.list_meta (list_id, icon, color)
+        VALUES
+          (${list.id}, ${meta.icon}, ${meta.color})
+      `
+    );
 
     await db.query(
       SQL`

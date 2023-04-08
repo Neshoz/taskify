@@ -43,9 +43,9 @@ export async function createList(
   next: NextFunction
 ) {
   try {
-    const { name } = req.body;
+    const { name, meta } = req.body;
 
-    const list = await listService.createList(req.userId!, name);
+    const list = await listService.createList(req.userId!, { name, meta });
     res.status(200).json(list);
   } catch (error) {
     if (error instanceof DatabaseError) {

@@ -12,3 +12,8 @@ export interface ApiList extends EntityBase {
   permissions: ListPermission[];
   meta: ListMeta;
 }
+
+export interface CreateListInput {
+  name: string;
+  meta: ListMeta;
+}
