@@ -1,5 +1,6 @@
 import express from "express";
 import * as listController from "../controllers/list-controller";
+import * as taskController from "../controllers/task-controller";
 
 const router = express.Router();
 
@@ -15,5 +16,6 @@ router
   .delete(listController.deleteList);
 
 router.get("/lists/:listId/users", listController.getListUsersCount);
+router.route("/lists/:listId/tasks").get(taskController.getTasks);
 
 export default router;

@@ -10,3 +10,5 @@ export function useCurrentUserQuery() {
     cacheTime: TEN_MINUTES,
   });
 }
+
+
