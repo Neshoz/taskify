@@ -1,7 +1,7 @@
 import { useQuery } from "react-query";
 import { fetchList, fetchUserLists } from "./api";
 
-const listsQueryKey = "lists";
+export const listsQueryKey = "lists";
 
 export function useListsQuery() {
   return useQuery(listsQueryKey, fetchUserLists);

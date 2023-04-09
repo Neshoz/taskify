@@ -1,9 +1,7 @@
-import { Center, Container, Grid } from "@mantine/core";
-import { Link } from "react-router-dom";
-import { routes } from "~/app/routes";
+import { Center, Container, Grid, Group } from "@mantine/core";
 import { FullscreenLoader } from "~/components";
 import { useListsQuery } from "~/feature/list";
-import { ListCard } from "./components";
+import { ListCard, CreateListButton } from "./components";
 
 const ListsPage = () => {
   const { data = [], isLoading } = useListsQuery();
@@ -15,12 +13,13 @@ const ListsPage = () => {
   return (
     <Center w="100%" h="100%">
       <Container w="45%">
+        <Group mb="xl" position="right">
+          <CreateListButton />
+        </Group>
         <Grid>
           {data.map((list) => (
             <Grid.Col key={list.id} span={4}>
-              <Link to={routes.list.path(list.id)}>
-                <ListCard list={list} />
-              </Link>
+              <ListCard list={list} />
             </Grid.Col>
           ))}
         </Grid>
