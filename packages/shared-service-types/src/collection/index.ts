@@ -2,15 +2,18 @@ import { EntityBase } from "../entity";
 
 export type ListPermission = "list:r" | "list:w";
 
+interface ListBase extends EntityBase {
+  name: string;
+}
+
+export interface ApiList extends ListBase {
+  permissions: ListPermission[];
+  meta: ListMeta;
+}
+
 export interface ListMeta {
   color: string;
   icon: string;
-}
-
-export interface ApiList extends EntityBase {
-  name: string;
-  permissions: ListPermission[];
-  meta: ListMeta;
 }
 
 export interface CreateListInput {

@@ -14,4 +14,6 @@ router
   .put(listController.updateList)
   .delete(listController.deleteList);
 
+router.get("/lists/:listId/users", listController.getListUsersCount);
+
 export default router;

@@ -37,6 +37,26 @@ export async function getList(
   }
 }
 
+export async function getListUsersCount(
+  req: ApiRequest,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    const { listId } = req.params;
+
+    if (!listId) {
+      throw new ApiError(400, "List id is required");
+    }
+
+    const listUsers = await listService.getListUsers(listId);
+
+    res.json(listUsers);
+  } catch (error) {
+    next(error);
+  }
+}
+
 export async function createList(
   req: ApiRequest,
   res: Response<ApiList>,

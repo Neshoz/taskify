@@ -15,11 +15,11 @@ export async function getLists(userId: string): Promise<ApiList[]> {
         created,
         modified,
         permissions,
-        to_json(clm.*) as meta
+        to_json(clm)::jsonb - 'list_id' as meta
       FROM
         collection.list cl
       INNER JOIN collection.list_user clu ON cl.id = clu.list_id
-      LEFT JOIN collection.list_meta clm ON cl.id = clm.list_id
+      INNER JOIN collection.list_meta clm ON cl.id = clm.list_id
       WHERE
         clu.user_id = ${userId}
     `
@@ -42,7 +42,7 @@ export async function getList(
         created,
         modified,
         permissions,
-        to_json(clm.*) as meta
+        to_json(clm)::jsonb - 'list_id' as meta
       FROM
         collection.list cl
       INNER JOIN collection.list_user clu ON cl.id = clu.list_id
@@ -53,6 +53,16 @@ export async function getList(
   );
 
   return result.rows[0];
+}
+
+export async function getListUsers(listId: string): Promise<string[]> {
+  const result = await db.query<{ userId: string }>(
+    SQL`
+      SELECT user_id as "userId" FROM collection.list_user WHERE list_id = ${listId}
+    `
+  );
+
+  return result.rows.map(({ userId }) => userId);
 }
 
 export async function createList(
