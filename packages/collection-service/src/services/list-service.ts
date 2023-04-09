@@ -1,10 +1,7 @@
-import { ApiError, AuthorizationError, db } from "@taskify/backend-common";
-import {
-  ApiList,
-  CreateListInput,
-  ListPermission,
-} from "@taskify/shared-service-types";
+import { db } from "@taskify/backend-common";
+import { ApiList, CreateListInput } from "@taskify/shared-service-types";
 import SQL from "sql-template-strings";
+import { validateUserInvitedAndPermission } from "../util";
 
 export async function getLists(userId: string): Promise<ApiList[]> {
   const result = await db.query<ApiList>(
@@ -129,37 +126,4 @@ export async function deleteList(userId: string, listId: string) {
   );
 
   return result.rowCount;
-}
-
-async function validateUserInvitedAndPermission(
-  userId: string,
-  listId: string,
-  requiredPermission: ListPermission
-) {
-  const result = await db.query<{
-    userId: string;
-    listId: string;
-    permissions: ListPermission;
-  }>(
-    SQL`
-      SELECT user_id as "userId", permissions, list_id from collection.list_user where list_id = ${listId}
-    `
-  );
-
-  if (result.rowCount === 0) {
-    console.error(`List with id ${listId} not found`);
-    throw new ApiError(400, `Not found`);
-  }
-
-  const invitedUsers = result.rows.map(({ userId }) => userId);
-
-  if (!invitedUsers.includes(userId)) {
-    throw new AuthorizationError("Insufficient permissions");
-  }
-
-  const { permissions } = result.rows[0];
-
-  if (!permissions.includes(requiredPermission)) {
-    throw new AuthorizationError("Insufficient permissions");
-  }
 }
