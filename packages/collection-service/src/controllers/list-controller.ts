@@ -3,6 +3,7 @@ import { DatabaseError } from "pg";
 import { ApiError, ApiRequest } from "@taskify/backend-common";
 import { ApiList } from "@taskify/shared-service-types";
 import * as listService from "../services/list-service";
+import { groupBy } from "../util";
 
 export async function getLists(
   req: ApiRequest,
@@ -11,7 +12,23 @@ export async function getLists(
 ) {
   try {
     const userLists = await listService.getLists(req.userId!);
-    res.json(userLists);
+    const listsUsers = await Promise.all(
+      userLists.map((list) => listService.getListUsers(list.id))
+    );
+
+    const flattenedRows = listsUsers.flatMap((list) => list);
+    const usersByListId = groupBy(
+      flattenedRows,
+      "listId",
+      (item) => item.userId
+    );
+
+    const mergedResult: ApiList[] = userLists.map((list) => ({
+      ...list,
+      users: usersByListId[list.id],
+    }));
+
+    res.json(mergedResult);
   } catch (error) {
     next(error);
   }
@@ -30,8 +47,14 @@ export async function getList(
     }
 
     const list = await listService.getList(req.userId!, listId);
+    const listUsers = await listService.getListUsers(listId);
 
-    res.json(list);
+    const mergedResult: ApiList = {
+      ...list,
+      users: listUsers.map(({ userId }) => userId),
+    };
+
+    res.json(mergedResult);
   } catch (error) {
     next(error);
   }

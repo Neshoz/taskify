@@ -1,4 +1,6 @@
 import { Center, Container, Grid, Group } from "@mantine/core";
+import { Link } from "react-router-dom";
+import { routes } from "~/app/routes";
 import { FullscreenLoader } from "~/components";
 import { useListsQuery } from "~/feature/list";
 import { ListCard, CreateListButton } from "./components";
@@ -19,7 +21,9 @@ const ListsPage = () => {
         <Grid>
           {data.map((list) => (
             <Grid.Col key={list.id} span={4}>
-              <ListCard list={list} />
+              <Link to={routes.list.path(list.id)}>
+                <ListCard list={list} />
+              </Link>
             </Grid.Col>
           ))}
         </Grid>

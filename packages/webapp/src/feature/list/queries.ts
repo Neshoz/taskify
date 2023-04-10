@@ -1,4 +1,5 @@
 import { useQuery } from "react-query";
+import { ONE_HOUR } from "~/util";
 import { fetchList, fetchListUsers, fetchUserLists } from "./api";
 
 export const listsQueryKey = "lists";
@@ -12,7 +13,12 @@ export function useListQuery(listId: string) {
 }
 
 export function useListUsersQuery(listId: string) {
-  return useQuery([listsQueryKey, listId, "users"], () =>
-    fetchListUsers(listId)
+  return useQuery(
+    [listsQueryKey, listId, "users"],
+    () => fetchListUsers(listId),
+    {
+      staleTime: ONE_HOUR,
+      cacheTime: ONE_HOUR,
+    }
   );
 }

@@ -3,8 +3,10 @@ import { ApiList, CreateListInput } from "@taskify/shared-service-types";
 import SQL from "sql-template-strings";
 import { validateUserInvitedAndPermission } from "../util";
 
-export async function getLists(userId: string): Promise<ApiList[]> {
-  const result = await db.query<ApiList>(
+type ListsResult = Omit<ApiList, "users">;
+
+export async function getLists(userId: string): Promise<ListsResult[]> {
+  const result = await db.query<ListsResult>(
     SQL`
       SELECT
         id,
@@ -28,10 +30,10 @@ export async function getLists(userId: string): Promise<ApiList[]> {
 export async function getList(
   userId: string,
   listId: string
-): Promise<ApiList> {
+): Promise<ListsResult> {
   await validateUserInvitedAndPermission(userId, listId, "list:r");
 
-  const result = await db.query<ApiList>(
+  const result = await db.query<ListsResult>(
     SQL`
       SELECT
         id,
@@ -52,14 +54,16 @@ export async function getList(
   return result.rows[0];
 }
 
-export async function getListUsers(listId: string): Promise<string[]> {
-  const result = await db.query<{ userId: string }>(
+export async function getListUsers(
+  listId: string
+): Promise<{ listId: string; userId: string }[]> {
+  const result = await db.query<{ listId: string; userId: string }>(
     SQL`
-      SELECT user_id as "userId" FROM collection.list_user WHERE list_id = ${listId}
+      SELECT list_id as "listId", user_id as "userId" FROM collection.list_user WHERE list_id = ${listId}
     `
   );
 
-  return result.rows.map(({ userId }) => userId);
+  return result.rows;
 }
 
 export async function createList(

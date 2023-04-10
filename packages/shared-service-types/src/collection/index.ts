@@ -9,6 +9,7 @@ interface ListBase extends EntityBase {
 export interface ApiList extends ListBase {
   permissions: ListPermission[];
   meta: ListMeta;
+  users: string[];
 }
 
 export interface ListMeta {
