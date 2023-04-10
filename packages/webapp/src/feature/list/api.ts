@@ -11,6 +11,10 @@ export function fetchList(listId: string) {
   return get<ApiList>(`/lists/${listId}`);
 }
 
+export function fetchListUsers(listId: string) {
+  return get<string[]>(`/lists/${listId}/users`);
+}
+
 export function createList(input: CreateListInput) {
   return post<ApiList>(`/lists`, input);
 }

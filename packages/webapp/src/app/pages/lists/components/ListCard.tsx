@@ -1,6 +1,9 @@
 import * as Icons from "react-icons/fa";
+import { TbUsers } from "react-icons/tb";
 import {
+  Badge,
   Box,
+  Center,
   createStyles,
   Group,
   Paper,
@@ -11,8 +14,6 @@ import {
   Title,
 } from "@mantine/core";
 import { ApiList } from "@taskify/shared-service-types";
-import { Link } from "react-router-dom";
-import { routes } from "~/app/routes";
 
 const useStyles = createStyles((theme) => ({
   paper: {
@@ -40,8 +41,8 @@ export const ListCard = ({ list }: Props) => {
 
   return (
     <Paper p="md" radius="lg" className={classes.paper}>
-      <Link to={routes.list.path(list.id)}>
-        <Stack>
+      <Stack>
+        <Group align="flex-start" position="apart">
           <ThemeIcon
             color={list.meta.color}
             variant="filled"
@@ -50,17 +51,31 @@ export const ListCard = ({ list }: Props) => {
           >
             <Icon />
           </ThemeIcon>
-          <Box w="100%">
-            <Title mt="md" order={2} className={classes.title}>
-              {list.name}
-            </Title>
-          </Box>
-          <Group position="apart" align="center">
-            <Text>x/y done</Text>
-            <Progress value={50} color={list.meta.color} sx={{ flex: 1 }} />
-          </Group>
-        </Stack>
-      </Link>
+          {list.users.length > 1 && (
+            <Badge
+              color="gray"
+              variant="filled"
+              size="lg"
+              rightSection={
+                <Center>
+                  <TbUsers size={14} />
+                </Center>
+              }
+            >
+              {list.users.length}
+            </Badge>
+          )}
+        </Group>
+        <Box w="100%">
+          <Title mt="md" order={2} className={classes.title}>
+            {list.name}
+          </Title>
+        </Box>
+        <Group position="apart" align="center">
+          <Text>x/y done</Text>
+          <Progress value={50} color={list.meta.color} sx={{ flex: 1 }} />
+        </Group>
+      </Stack>
     </Paper>
   );
 };
