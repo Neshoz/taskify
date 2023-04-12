@@ -16,6 +16,15 @@ router
   .delete(listController.deleteList);
 
 router.get("/lists/:listId/users", listController.getListUsersCount);
-router.route("/lists/:listId/tasks").get(taskController.getTasks);
+
+router
+  .route("/lists/:listId/tasks")
+  .get(taskController.getTasks)
+  .post(taskController.createTask);
+
+router
+  .route("/lists/:listId/tasks/:taskId")
+  .put(taskController.updateTask)
+  .delete(taskController.deleteTask);
 
 export default router;
