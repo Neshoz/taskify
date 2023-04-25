@@ -64,6 +64,8 @@ export async function updateTask(
     const { listId, taskId } = req.params;
     const { name, description, status, dueDate } = req.body;
 
+    console.log("this is hit");
+
     await validateUserInvitedAndPermission(req.userId!, listId, "list:w");
 
     const { list_id, ...rest } = await taskService.updateTask(taskId, {

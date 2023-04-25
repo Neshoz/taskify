@@ -27,7 +27,7 @@ export const IconPicker = ({ value, onChange }: Props) => {
   const ChosenIcon = Icons[value];
 
   return (
-    <Popover width={240}>
+    <Popover width={240} withinPortal position="bottom-start">
       <Popover.Target>
         <Box w="max-content">
           <Text size="sm" weight={500} sx={{ pointerEvents: "none" }}>
@@ -38,7 +38,7 @@ export const IconPicker = ({ value, onChange }: Props) => {
           </ActionIcon>
         </Box>
       </Popover.Target>
-      <Popover.Dropdown h={500} sx={{ overflow: "auto" }}>
+      <Popover.Dropdown h={250} sx={{ overflow: "auto" }}>
         <TextInput
           placeholder="Search icon..."
           mb="md"

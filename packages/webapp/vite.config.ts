@@ -12,6 +12,7 @@ export default defineConfig({
   },
   server: {
     host: "app.local.taskify.io",
+    port: 5178,
     proxy: {
       "/api": {
         target: "http://api.local.taskify.io",

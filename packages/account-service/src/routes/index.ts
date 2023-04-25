@@ -10,5 +10,9 @@ router.get("/validate-session", authController.getSession);
 
 // User
 router.get("/me", userController.getSessionUser);
+router
+  .route("/users/search")
+  .get(userController.searchUsers)
+  .post(userController.getUsersByIds);
 
 export { router };

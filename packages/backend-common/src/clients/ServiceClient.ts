@@ -1,11 +1,12 @@
 import axios, { AxiosError } from "axios";
+import { IncomingHttpHeaders } from "http";
 import { ClientError } from "../errors";
 
 interface RequestOptionsBase {
   path: string;
-  session: string;
   body?: object;
   params?: Record<string, unknown>;
+  headers?: IncomingHttpHeaders;
 }
 
 interface RequestOptions extends RequestOptionsBase {
@@ -28,11 +29,11 @@ export class ServiceClient {
     return data;
   };
   put = async <T>(options: RequestOptionsBase) => {
-    const { data } = await this.request<T>({ ...options, method: "PUT " });
+    const { data } = await this.request<T>({ ...options, method: "PUT" });
     return data;
   };
   delete = async <T>(options: RequestOptionsBase) => {
-    const { data } = await this.request<T>({ ...options, method: "DELETE " });
+    const { data } = await this.request<T>({ ...options, method: "DELETE" });
     return data;
   };
 
@@ -41,7 +42,7 @@ export class ServiceClient {
     body,
     params,
     method,
-    session,
+    headers,
   }: RequestOptions) => {
     const url = `${this.baseUrl}${path}`;
     try {
@@ -52,8 +53,8 @@ export class ServiceClient {
         data: body,
         withCredentials: true,
         headers: {
-          Cookie: `session=${session}`,
           "Content-Type": "application/json",
+          cookie: headers?.cookie,
         },
       });
     } catch (error) {

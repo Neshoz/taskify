@@ -6,6 +6,7 @@ import { MdAddTask } from "react-icons/md";
 import { IoMdTrash } from "react-icons/io";
 import { ActionIcon, Menu } from "@mantine/core";
 import { CreateTaskModal } from "./CreateTaskModal";
+import { ManageUsersModal } from "./ManageUsersModal";
 
 interface Props {
   isAbleToCreateTask: boolean;
@@ -14,6 +15,7 @@ interface Props {
 export const OverflowMenu = ({ isAbleToCreateTask }: Props) => {
   const { listId } = useParams<{ listId: string }>();
   const [isCreatingTask, setIsCreatingTask] = useState(false);
+  const [isManagingUsers, setIsManagingUsers] = useState(false);
 
   return (
     <>
@@ -35,7 +37,12 @@ export const OverflowMenu = ({ isAbleToCreateTask }: Props) => {
           >
             Create task
           </Menu.Item>
-          <Menu.Item icon={<RiUserAddLine size={18} />}>Invite user</Menu.Item>
+          <Menu.Item
+            icon={<RiUserAddLine size={18} />}
+            onClick={() => setIsManagingUsers(true)}
+          >
+            Manage users
+          </Menu.Item>
           <Menu.Item color="red.5" icon={<IoMdTrash size={18} />}>
             Delete list
           </Menu.Item>
@@ -45,6 +52,11 @@ export const OverflowMenu = ({ isAbleToCreateTask }: Props) => {
         listId={listId}
         open={isCreatingTask}
         onClose={() => setIsCreatingTask(false)}
+      />
+      <ManageUsersModal
+        listId={listId}
+        open={isManagingUsers}
+        onClose={() => setIsManagingUsers(false)}
       />
     </>
   );

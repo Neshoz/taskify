@@ -51,7 +51,7 @@ export const ListCard = ({ list }: Props) => {
           >
             <Icon />
           </ThemeIcon>
-          {list.users.length > 1 && (
+          {list.users?.length && list.users.length > 1 && (
             <Badge
               color="gray"
               variant="filled"

@@ -24,7 +24,7 @@ const ListPage = () => {
 
   // TODO: Move this check to only the task list when util components are in place.
   if (!tasks) {
-    return <Title></Title>;
+    return <Title>No tasks</Title>;
   }
 
   const hasWritePermission = list.permissions.includes("list:w");

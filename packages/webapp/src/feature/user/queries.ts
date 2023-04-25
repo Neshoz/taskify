@@ -1,6 +1,6 @@
 import { useQuery } from "react-query";
 import { TEN_MINUTES } from "~/util";
-import { fetchCurrentUser } from "./api";
+import { fetchCurrentUser, searchUsers } from "./api";
 
 const currentUserQueryKey = "current-user";
 
@@ -11,4 +11,6 @@ export function useCurrentUserQuery() {
   });
 }
 
-
+export function useSearchUsersQuery(searchTerm: string) {
+  return useQuery([searchTerm], () => searchUsers(searchTerm));
+}

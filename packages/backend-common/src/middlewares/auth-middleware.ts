@@ -1,6 +1,6 @@
 import { Response, NextFunction } from "express";
 import { parse } from "cookie";
-import { authClient } from "../clients";
+import { accountServiceClient } from "../clients";
 import { AuthenticationError } from "../errors";
 import { ApiRequest } from "../types";
 
@@ -22,7 +22,9 @@ export async function authMiddleware(
   }
 
   try {
-    const { sessionId, userId } = await authClient.getSession(cookie.session);
+    const { sessionId, userId } = await accountServiceClient.getSession(
+      req.headers
+    );
     req.userId = userId;
     req.sessionId = sessionId;
     next();
