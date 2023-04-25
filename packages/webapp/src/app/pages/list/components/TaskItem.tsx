@@ -16,10 +16,6 @@ import { some } from "~/util";
 const useStyles = createStyles((theme, isDone: boolean) => ({
   root: {
     background: theme.colors.dark[6],
-    "&:hover": {
-      background: theme.colors.dark[5],
-      cursor: "pointer",
-    },
   },
   text: {
     textDecoration: isDone ? "line-through" : "none",
@@ -82,7 +78,7 @@ export const TaskItem = ({ task, icon: Icon, color, canEdit }: Props) => {
             <ActionIcon
               size="lg"
               variant="subtle"
-              color="red.5"
+              color="gray"
               onClick={handleDeleteTaskClick}
             >
               <IoMdTrash size={22} />

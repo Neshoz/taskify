@@ -15,7 +15,7 @@ export const Root = ({ children }: Props) => (
       theme={{
         colorScheme: "dark",
         primaryColor: "blue",
-        globalStyles: (theme) => ({
+        globalStyles: () => ({
           a: {
             textDecoration: "inherit",
             color: "inherit",

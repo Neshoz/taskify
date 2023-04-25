@@ -1,3 +1,4 @@
+import { ApiUser } from "../account";
 import { EntityBase } from "../entity";
 
 export type ListPermission = "list:r" | "list:w";
@@ -9,7 +10,11 @@ interface ListBase extends EntityBase {
 export interface ApiList extends ListBase {
   permissions: ListPermission[];
   meta: ListMeta;
-  users: string[];
+  users?: string[];
+}
+
+export interface ListUser extends ApiUser {
+  permissions: ListPermission[];
 }
 
 export interface ListMeta {
@@ -20,4 +25,9 @@ export interface ListMeta {
 export interface CreateListInput {
   name: string;
   meta: ListMeta;
+}
+
+export interface AddUsersToListInput {
+  userId: string;
+  permissions: ListPermission[];
 }

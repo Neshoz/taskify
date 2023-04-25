@@ -8,7 +8,7 @@ import {
 import { authMiddleware } from "./middlewares/auth-middleware";
 import { errorMiddleware } from "./middlewares/error-middleware";
 import { ApiRequest } from "./types";
-import { authClient } from "./clients";
+import { accountServiceClient } from "./clients";
 
 export {
   AuthenticationError,
@@ -19,5 +19,5 @@ export {
   errorMiddleware,
   db,
   ApiRequest,
-  authClient,
+  accountServiceClient,
 };

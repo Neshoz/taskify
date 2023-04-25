@@ -1,7 +1,12 @@
-import { ApiList, CreateListInput } from "@taskify/shared-service-types";
+import {
+  ApiList,
+  CreateListInput,
+  AddUsersToListInput,
+  ListUser,
+} from "@taskify/shared-service-types";
 import { HttpClient } from "~/util";
 
-const { get, post } = new HttpClient("/api/collection");
+const { get, post, put } = new HttpClient("/api/collection");
 
 export function fetchUserLists() {
   return get<ApiList[]>("/lists");
@@ -12,9 +17,14 @@ export function fetchList(listId: string) {
 }
 
 export function fetchListUsers(listId: string) {
-  return get<string[]>(`/lists/${listId}/users`);
+  return get<ListUser[]>(`/lists/${listId}/users`);
 }
 
 export function createList(input: CreateListInput) {
   return post<ApiList>(`/lists`, input);
+}
+
+export function inviteUsersToList(payload: InviteUsersToListVariables) {
+  const { listId, users } = payload;
+  return put<AddUsersToListInput[]>(`/lists/${listId}/users`, users);
 }

@@ -3,20 +3,6 @@ import { ApiError, AuthorizationError, db } from "@taskify/backend-common";
 import { ListPermission } from "@taskify/shared-service-types";
 import SQL from "sql-template-strings";
 
-export function groupBy<T>(
-  collection: T[],
-  key: keyof T,
-  cb: (item: T) => ReturnType<typeof cb>
-) {
-  return collection.reduce((acc, curr) => {
-    if (!acc[curr[key]]) {
-      acc[curr[key]] = [];
-    }
-    acc[curr[key]].push(cb(curr));
-    return acc;
-  }, {} as Record<string, ReturnType<typeof cb>>);
-}
-
 export async function validateUserInvitedAndPermission(
   userId: string,
   listId: string,

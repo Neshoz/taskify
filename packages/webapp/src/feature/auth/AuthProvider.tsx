@@ -2,7 +2,6 @@ import { createContext, ReactNode, useEffect, useState } from "react";
 import { useWindowEvent } from "@mantine/hooks";
 import { ServerError, useGuardedContext } from "~/util";
 import { FullscreenLoader } from "~/components";
-import { useCurrentUserQuery } from "../user";
 import { useLoginMutation, useLogoutMutation } from "./mutations";
 import { fetchCurrentUser } from "../user/api";
 

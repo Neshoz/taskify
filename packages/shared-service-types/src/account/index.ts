@@ -7,4 +7,5 @@ export interface ApiSession {
 
 export interface ApiUser extends EntityBase {
   email: string;
+  fullName: string;
 }

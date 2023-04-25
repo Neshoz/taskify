@@ -75,6 +75,7 @@ export const CreateTaskModal = ({ open, onClose, listId }: Props) => {
             value={dueDate ? new Date(dueDate) : null}
             disabled={isLoading}
             clearable
+            popoverProps={{ withinPortal: true }}
             onChange={(val) =>
               form.setFieldValue("dueDate", val?.toISOString())
             }

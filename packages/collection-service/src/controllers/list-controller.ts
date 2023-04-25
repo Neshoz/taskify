@@ -1,9 +1,17 @@
 import { NextFunction, Response } from "express";
 import { DatabaseError } from "pg";
-import { ApiError, ApiRequest } from "@taskify/backend-common";
-import { ApiList } from "@taskify/shared-service-types";
+import {
+  accountServiceClient,
+  ApiError,
+  ApiRequest,
+} from "@taskify/backend-common";
+import {
+  AddUsersToListInput,
+  ApiList,
+  ListUser,
+} from "@taskify/shared-service-types";
 import * as listService from "../services/list-service";
-import { groupBy } from "../util";
+import { validateUserInvitedAndPermission } from "../util";
 
 export async function getLists(
   req: ApiRequest,
@@ -12,21 +20,18 @@ export async function getLists(
 ) {
   try {
     const userLists = await listService.getLists(req.userId!);
-    const listsUsers = await Promise.all(
-      userLists.map((list) => listService.getListUsers(list.id))
+    const listsUsers = await listService.getListsUsers(
+      userLists.map(({ id }) => id)
     );
 
-    const flattenedRows = listsUsers.flatMap((list) => list);
-    const usersByListId = groupBy(
-      flattenedRows,
-      "listId",
-      (item) => item.userId
-    );
+    const mergedResult: ApiList[] = userLists.map((list) => {
+      const index = listsUsers.findIndex((el) => el.listId === list.id);
 
-    const mergedResult: ApiList[] = userLists.map((list) => ({
-      ...list,
-      users: usersByListId[list.id],
-    }));
+      return {
+        ...list,
+        users: index === -1 ? [] : listsUsers[index].userIds,
+      };
+    });
 
     res.json(mergedResult);
   } catch (error) {
@@ -46,23 +51,19 @@ export async function getList(
       throw new ApiError(400, "List id is required");
     }
 
-    const list = await listService.getList(req.userId!, listId);
-    const listUsers = await listService.getListUsers(listId);
+    await validateUserInvitedAndPermission(req.userId!, listId, "list:r");
 
-    const mergedResult: ApiList = {
-      ...list,
-      users: listUsers.map(({ userId }) => userId),
-    };
+    const list = await listService.getList(listId);
 
-    res.json(mergedResult);
+    res.json(list);
   } catch (error) {
     next(error);
   }
 }
 
-export async function getListUsersCount(
+export async function getListUsers(
   req: ApiRequest,
-  res: Response,
+  res: Response<ListUser[]>,
   next: NextFunction
 ) {
   try {
@@ -72,9 +73,23 @@ export async function getListUsersCount(
       throw new ApiError(400, "List id is required");
     }
 
-    const listUsers = await listService.getListUsers(listId);
+    await validateUserInvitedAndPermission(req.userId!, listId, "list:r");
 
-    res.json(listUsers);
+    const listUsers = await listService.getListUsers(listId);
+    const users = await accountServiceClient.getUsers({
+      headers: req.headers,
+      users: listUsers.map(({ userId }) => userId),
+    });
+
+    const mergedResult: ListUser[] = users.map((user) => {
+      const index = listUsers.findIndex(({ userId }) => user.id === userId);
+      return {
+        ...user,
+        permissions: listUsers[index].permissions,
+      };
+    });
+
+    res.json(mergedResult);
   } catch (error) {
     next(error);
   }
@@ -110,7 +125,9 @@ export async function updateList(
     const { listId } = req.params;
     const { name } = req.body;
 
-    const list = await listService.updateList(req.userId!, listId, name);
+    await validateUserInvitedAndPermission(req.userId!, listId, "list:w");
+
+    const list = await listService.updateList(listId, name);
     res.status(200).json(list);
   } catch (error) {
     next(error);
@@ -124,9 +141,33 @@ export async function deleteList(
 ) {
   try {
     const { listId } = req.params;
-    await listService.deleteList(req.userId!, listId);
+
+    await validateUserInvitedAndPermission(req.userId!, listId, "list:w");
+    await listService.deleteList(listId);
 
     res.status(204).json({ success: true });
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function updateListUsers(
+  req: ApiRequest,
+  res: Response<AddUsersToListInput[]>,
+  next: NextFunction
+) {
+  try {
+    const { listId } = req.params;
+
+    await validateUserInvitedAndPermission(req.userId!, listId, "list:w");
+
+    const newListUsers = await listService.updateListUsers(
+      req.userId!,
+      listId,
+      req.body
+    );
+
+    res.status(201).json(newListUsers);
   } catch (error) {
     next(error);
   }

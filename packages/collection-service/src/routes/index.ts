@@ -15,7 +15,10 @@ router
   .put(listController.updateList)
   .delete(listController.deleteList);
 
-router.get("/lists/:listId/users", listController.getListUsersCount);
+router
+  .route("/lists/:listId/users")
+  .get(listController.getListUsers)
+  .put(listController.updateListUsers);
 
 router
   .route("/lists/:listId/tasks")
