@@ -23,17 +23,20 @@ const useStyles = createStyles((theme) => ({
 }));
 
 interface Props {
+  label?: string;
   onSelect: (user: ApiUser) => void;
 }
 
-export const UserSearchDropdown = ({ onSelect }: Props) => {
+export const UserSearchDropdown = ({ label, onSelect }: Props) => {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [debouncedSearch] = useDebouncedValue(search, 200);
   const { data = [], isLoading } = useSearchUsersQuery(debouncedSearch);
   const { classes } = useStyles();
 
-  const handleChange = (user: ApiUser) => {
+  const onItemClick = (user: ApiUser) => {
+    setSearch(user.email);
+    setOpen(false);
     onSelect(user);
   };
 
@@ -46,8 +49,9 @@ export const UserSearchDropdown = ({ onSelect }: Props) => {
     >
       <Popover.Target>
         <TextInput
+          labelProps={{ fw: "bold", pb: 6 }}
           onFocus={() => setOpen(true)}
-          label="Search users"
+          label={label ?? "Search users"}
           placeholder="Email or name"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
@@ -59,7 +63,7 @@ export const UserSearchDropdown = ({ onSelect }: Props) => {
           <Group
             key={user.id}
             className={classes.item}
-            onClick={() => handleChange(user)}
+            onClick={() => onItemClick(user)}
           >
             <Text>{user.email}</Text>
           </Group>

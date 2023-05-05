@@ -28,6 +28,11 @@ export interface CreateListInput {
 }
 
 export interface AddUsersToListInput {
+  email: string;
+  permissions: ListPermission[];
+}
+
+export interface UpdateListUserPermissionsResponse {
   userId: string;
   permissions: ListPermission[];
 }
