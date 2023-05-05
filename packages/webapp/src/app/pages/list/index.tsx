@@ -1,19 +1,28 @@
-import { ActionIcon, Container, Group, Stack, Title } from "@mantine/core";
-import { IoChevronBack } from "react-icons/io5";
-import { TbCircleCheckFilled, TbCircle } from "react-icons/tb";
 import { useHistory, useParams } from "react-router";
+import {
+  ActionIcon,
+  Box,
+  Button,
+  Center,
+  Group,
+  Stack,
+  Tabs,
+  Text,
+  Title,
+} from "@mantine/core";
+import { IoChevronBack } from "react-icons/io5";
 import { FullscreenLoader } from "~/components";
-import { useListQuery } from "~/feature/list";
-import { useListTasksQuery } from "~/feature/task";
-import { OverflowMenu, TaskItem } from "./components";
+import { useListQuery, useUpdateListMutation } from "~/feature/list";
+import { EditableContent } from "~/app/components";
+import { TaskList, ListUsers } from "./components";
 
 const ListPage = () => {
   const { listId } = useParams<{ listId: string }>();
   const history = useHistory();
   const { data: list, isLoading: isLoadingList } = useListQuery(listId);
-  const { data: tasks, isLoading: isLoadingTasks } = useListTasksQuery(listId);
+  const { mutateAsync, isLoading: isUpdatingList } = useUpdateListMutation();
 
-  if (isLoadingList || isLoadingTasks) {
+  if (isLoadingList) {
     return <FullscreenLoader />;
   }
 
@@ -22,65 +31,52 @@ const ListPage = () => {
     return <Title>Something went wrong with loading list</Title>;
   }
 
-  // TODO: Move this check to only the task list when util components are in place.
-  if (!tasks) {
-    return <Title>No tasks</Title>;
-  }
-
   const hasWritePermission = list.permissions.includes("list:w");
-
-  const notCompletedTasks = tasks.filter((task) => task.status === false);
-
-  const completedTasks = tasks.filter((task) => task.status === true);
 
   return (
     <Stack w="100%" h="100%" my="xl">
-      <Container w="40%">
-        <Group mb={50} position="apart">
-          <Group>
+      <Center>
+        <Box w="65%">
+          <Group mb={40}>
             <ActionIcon
               size="xl"
               radius="md"
-              variant="light"
+              variant="subtle"
               onClick={history.goBack}
             >
               <IoChevronBack />
             </ActionIcon>
-            <Title>{list.name}</Title>
+            <EditableContent
+              initialValue={list.name}
+              loading={isUpdatingList}
+              as={Title}
+              onSubmit={(name) => mutateAsync({ listId, name })}
+            />
           </Group>
-          <OverflowMenu isAbleToCreateTask={hasWritePermission} />
-        </Group>
 
-        <Stack>
-          <Title order={2} size="sm">
-            Tasks - {notCompletedTasks.length}
-          </Title>
-          {notCompletedTasks.map((task) => (
-            <TaskItem
-              key={task.id}
-              task={task}
-              icon={TbCircle}
-              color={list.meta.color}
-              canEdit={hasWritePermission}
-            />
-          ))}
-        </Stack>
+          <Tabs defaultValue="tasks">
+            <Tabs.List mb={40}>
+              <Tabs.Tab value="tasks">Tasks</Tabs.Tab>
+              <Tabs.Tab value="users">Users</Tabs.Tab>
+              <Tabs.Tab value="notifications">Notifications</Tabs.Tab>
+            </Tabs.List>
 
-        <Stack mt={32}>
-          <Title order={2} size="sm">
-            Completed - {completedTasks.length}
-          </Title>
-          {completedTasks.map((task) => (
-            <TaskItem
-              key={task.id}
-              task={task}
-              icon={TbCircleCheckFilled}
-              color={list.meta.color}
-              canEdit={hasWritePermission}
-            />
-          ))}
-        </Stack>
-      </Container>
+            <Tabs.Panel value="tasks">
+              <TaskList
+                listId={list.id}
+                hasWritePermission={hasWritePermission}
+                listMeta={list.meta}
+              />
+            </Tabs.Panel>
+            <Tabs.Panel value="users">
+              <ListUsers listId={list.id} />
+            </Tabs.Panel>
+            <Tabs.Panel value="notifications">
+              <></>
+            </Tabs.Panel>
+          </Tabs>
+        </Box>
+      </Center>
     </Stack>
   );
 };

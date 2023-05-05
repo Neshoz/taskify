@@ -1,5 +1,5 @@
-import { IconType } from "react-icons";
 import { IoMdTrash } from "react-icons/io";
+import { TbCircleCheckFilled, TbCircle } from "react-icons/tb";
 import {
   ActionIcon,
   createStyles,
@@ -20,16 +20,17 @@ const useStyles = createStyles((theme, isDone: boolean) => ({
   text: {
     textDecoration: isDone ? "line-through" : "none",
   },
+  icon: {
+    color: isDone ? theme.colors.teal[5] : theme.colors.blue[5],
+  },
 }));
 
 interface Props {
   task: TaskBase;
-  icon: IconType;
   canEdit: boolean;
-  color?: string;
 }
 
-export const TaskItem = ({ task, icon: Icon, color, canEdit }: Props) => {
+export const TaskItem = ({ task, canEdit }: Props) => {
   const { classes } = useStyles(task.status);
   const { mutate: updateTask, status: updateTaskStatus } =
     useUpdateTaskMutation();
@@ -49,9 +50,10 @@ export const TaskItem = ({ task, icon: Icon, color, canEdit }: Props) => {
   };
 
   const isLoading = some("loading", updateTaskStatus, deleteTaskStatus);
+  const Icon = task.status ? TbCircleCheckFilled : TbCircle;
 
   return (
-    <Paper p="md" radius="md" className={classes.root}>
+    <Paper p="md" radius="sm" className={classes.root}>
       <Group position="apart">
         <Group align={task.status ? "center" : "flex-start"}>
           <ActionIcon
@@ -60,7 +62,7 @@ export const TaskItem = ({ task, icon: Icon, color, canEdit }: Props) => {
             onClick={toggleTaskCompletion}
             disabled={!canEdit}
           >
-            <Icon size={24} color={color} />
+            <Icon size={24} className={classes.icon} />
           </ActionIcon>
           <Stack spacing={0}>
             <Title order={3} size="sm" className={classes.text}>

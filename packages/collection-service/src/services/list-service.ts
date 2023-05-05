@@ -6,6 +6,7 @@ import {
   ListPermission,
 } from "@taskify/shared-service-types";
 import SQL from "sql-template-strings";
+import { AddUserToListQuery } from "./types";
 
 export async function getLists(userId: string): Promise<ApiList[]> {
   const result = await db.query<ApiList>(
@@ -58,7 +59,13 @@ export async function getListUsers(
     permissions: ListPermission[];
   }>(
     SQL`
-      SELECT user_id as "userId", permissions FROM collection.list_user WHERE list_id = ${listId}
+      SELECT
+        user_id as "userId",
+        permissions
+      FROM
+        collection.list_user
+      WHERE
+        list_id = ${listId}
     `
   );
 
@@ -164,70 +171,52 @@ export async function deleteList(listId: string) {
   return result.rowCount;
 }
 
-export async function updateListUsers(
-  userId: string,
+export async function deleteUserFromList(
   listId: string,
-  users: AddUsersToListInput[]
-): Promise<AddUsersToListInput[]> {
-  try {
-    await db.query(SQL`BEGIN`);
-    const insertQuery = SQL``;
+  userId: string
+): Promise<number> {
+  const result = await db.query(
+    SQL`DELETE FROM collection.list_user WHERE list_id = ${listId} AND user_id = ${userId}`
+  );
 
-    if (users.length) {
-      insertQuery.append(SQL`
-        INSERT INTO
-          collection.list_user (list_id, user_id, permissions)
-        VALUES
-      `);
+  return result.rowCount;
+}
 
-      users.forEach(({ userId, permissions }, i) => {
-        insertQuery.append(SQL` (${listId}, ${userId}, ${permissions})`);
+export async function addUserToList(
+  listId: string,
+  payload: AddUserToListQuery
+): Promise<AddUserToListQuery> {
+  const { userId, permissions } = payload;
 
-        if (i++ !== users.length - 1) {
-          insertQuery.append(SQL`,`);
-        }
-      });
+  const result = await db.query<AddUserToListQuery>(
+    SQL`
+      INSERT INTO
+        collection.list_user (list_id, user_id, permissions)
+      VALUES
+        (${listId}, ${userId}, ${permissions})
+      RETURNING user_id as "userId", permissions
+    `
+  );
 
-      insertQuery.append(
-        SQL` ON CONFLICT (list_id, user_id) DO UPDATE SET permissions = excluded.permissions`
-      );
+  return result.rows[0];
+}
 
-      insertQuery.append(SQL` RETURNING (user_id, permissions)`);
-    }
+export async function updateListUser(
+  listId: string,
+  userId: string,
+  permissions: ListPermission[]
+) {
+  const result = await db.query(
+    SQL`
+      UPDATE
+        collection.list_user
+      SET
+        permissions = ${permissions}
+      WHERE
+        list_id = ${listId} AND user_id = ${userId}
+      RETURNING user_id as "userId", permissions
+    `
+  );
 
-    const result = await db.query(insertQuery);
-
-    let delQuery = `
-      DELETE FROM
-        collection.list_user 
-    `;
-
-    if (users.length) {
-      const ids = users.map((_, i) => `$${i + 1}`).join(",");
-      delQuery += `
-          WHERE
-            user_id
-          NOT IN
-            (${ids})
-          AND
-            user_id != $${users.length + 1}
-        `;
-    } else {
-      delQuery += ` WHERE user_id != $1`;
-      delQuery;
-    }
-
-    await db.query({
-      text: delQuery,
-      values: [...users.map(({ userId }) => userId), userId],
-    });
-
-    await db.query(SQL`COMMIT`);
-
-    return result.rows;
-  } catch (error) {
-    await db.query(SQL`ROLLBACK`);
-    console.error(error);
-    throw error;
-  }
+  return result.rows[0];
 }

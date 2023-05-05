@@ -12,6 +12,7 @@ import {
 } from "@taskify/shared-service-types";
 import * as listService from "../services/list-service";
 import { validateUserInvitedAndPermission } from "../util";
+import { AddUserToListQuery } from "../services/types";
 
 export async function getLists(
   req: ApiRequest,
@@ -145,29 +146,72 @@ export async function deleteList(
     await validateUserInvitedAndPermission(req.userId!, listId, "list:w");
     await listService.deleteList(listId);
 
-    res.status(204).json({ success: true });
+    res.json({ success: true });
   } catch (error) {
     next(error);
   }
 }
 
-export async function updateListUsers(
+export async function deleteUserFromList(
   req: ApiRequest,
-  res: Response<AddUsersToListInput[]>,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    const { listId, userId } = req.params;
+
+    await validateUserInvitedAndPermission(userId, listId, "list:w");
+    await listService.deleteUserFromList(listId, userId);
+
+    res.json({ success: true });
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function addUserToList(
+  req: ApiRequest,
+  res: Response<AddUserToListQuery>,
   next: NextFunction
 ) {
   try {
     const { listId } = req.params;
+    const { email, permissions } = req.body;
 
     await validateUserInvitedAndPermission(req.userId!, listId, "list:w");
 
-    const newListUsers = await listService.updateListUsers(
-      req.userId!,
-      listId,
-      req.body
-    );
+    const [user] = await accountServiceClient.searchUsers({
+      headers: req.headers,
+      searchTerm: email,
+    });
 
-    res.status(201).json(newListUsers);
+    const result = await listService.addUserToList(listId, {
+      userId: user.id,
+      permissions,
+    });
+    res.json(result);
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function updateListUser(
+  req: ApiRequest,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    const { listId, userId } = req.params;
+    const { permissions } = req.body;
+
+    await validateUserInvitedAndPermission(req.userId!, listId, "list:w");
+
+    const result = await listService.updateListUser(
+      listId,
+      userId,
+      permissions
+    );
+    res.json(result);
   } catch (error) {
     next(error);
   }

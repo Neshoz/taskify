@@ -25,7 +25,21 @@ export function getUsers({
   });
 }
 
+export function searchUsers({
+  headers,
+  searchTerm,
+}: {
+  headers: IncomingHttpHeaders;
+  searchTerm: string;
+}) {
+  return client.get<ApiUser[]>({
+    path: `/users/search?term=${searchTerm}`,
+    headers,
+  });
+}
+
 export const accountServiceClient = {
   getSession,
   getUsers,
+  searchUsers,
 };

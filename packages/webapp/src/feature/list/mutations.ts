@@ -1,9 +1,22 @@
 import { showNotification } from "@mantine/notifications";
-import { AddUsersToListInput } from "@taskify/shared-service-types";
+import {
+  AddUsersToListInput,
+  UpdateListUserPermissionsResponse,
+} from "@taskify/shared-service-types";
 import { useMutation, useQueryClient } from "react-query";
 import { ServerError } from "~/util";
-import { createList, inviteUsersToList } from "./api";
+import {
+  addUserToList,
+  createList,
+  removeListUser,
+  updateList,
+  updateListUserPermissions,
+} from "./api";
 import { listsQueryKey } from "./queries";
+import {
+  RemoveListUserVariables,
+  UpdateListUserPermissionsVariables,
+} from "./types";
 
 export function useCreateListMutation() {
   const queryClient = useQueryClient();
@@ -21,22 +34,76 @@ export function useCreateListMutation() {
   });
 }
 
-export function useInviteUsersToListMutation() {
+export function useAddUserToListMutation(listId: string) {
+  const queryClient = useQueryClient();
+
+  return useMutation<AddUsersToListInput, ServerError, AddUsersToListInput>({
+    mutationFn: (input) => addUserToList(listId, input),
+    onSuccess: () => {
+      showNotification({
+        title: "Success",
+        message: `Successfully invited collaborator`,
+        color: "teal",
+      });
+      queryClient.invalidateQueries([listsQueryKey, listId, "users"], {
+        exact: true,
+      });
+    },
+  });
+}
+
+export function useUpdateListUserPermissionsMutation() {
   const queryClient = useQueryClient();
 
   return useMutation<
-    AddUsersToListInput[],
+    UpdateListUserPermissionsResponse,
     ServerError,
-    InviteUsersToListVariables
+    UpdateListUserPermissionsVariables
   >({
-    mutationFn: inviteUsersToList,
-    onSuccess: (_, variables) => {
+    mutationFn: updateListUserPermissions,
+    onSuccess: (_, { listId }) => {
       showNotification({
-        title: "Success invited users",
-        message: "New users have been invited to your collection",
+        title: "Success",
+        message: "Successfully updated permissions",
         color: "teal",
       });
-      queryClient.invalidateQueries([listsQueryKey, variables.listId]);
+      queryClient.invalidateQueries([listsQueryKey, listId, "users"], {
+        exact: true,
+      });
+    },
+  });
+}
+
+export function useRemoveListUserMutation() {
+  const queryClient = useQueryClient();
+
+  return useMutation<unknown, ServerError, RemoveListUserVariables>({
+    mutationFn: removeListUser,
+    onSuccess: (_, { listId }) => {
+      showNotification({
+        title: "Success",
+        message: "Successfully removed collaborator from list",
+        color: "teal",
+      });
+      queryClient.invalidateQueries([listsQueryKey, listId, "users"], {
+        exact: true,
+      });
+    },
+  });
+}
+
+export function useUpdateListMutation() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: updateList,
+    onSuccess: (_, { listId }) => {
+      showNotification({
+        title: "Success",
+        message: "List name updated successfully",
+        color: "teal",
+      });
+      queryClient.invalidateQueries([listsQueryKey, listId], { exact: true });
     },
   });
 }
