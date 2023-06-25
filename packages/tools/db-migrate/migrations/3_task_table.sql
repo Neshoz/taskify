@@ -13,11 +13,12 @@ CREATE TABLE IF NOT EXISTS collection.task
     created timestamp with time zone default current_timestamp,
     modified timestamp with time zone default current_timestamp,
     due_date timestamp with time zone DEFAULT NULL,
-    name character varying(255) NOT NULL unique,
+    name character varying(255) NOT NULL,
     description character varying(255) NOT NULL,
     status boolean NOT NULL default false,
     CONSTRAINT task_pkey PRIMARY KEY (id),
-    CONSTRAINT list_fkey FOREIGN KEY(list_id) REFERENCES collection.list(id) ON DELETE CASCADE
+    CONSTRAINT list_fkey FOREIGN KEY(list_id) REFERENCES collection.list(id) ON DELETE CASCADE,
+    CONSTRAINT unique_task_name UNIQUE (list_id, name)
 );
 GRANT ALL ON SCHEMA collection TO postgres;
 

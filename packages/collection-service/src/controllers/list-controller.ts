@@ -4,12 +4,9 @@ import {
   accountServiceClient,
   ApiError,
   ApiRequest,
+  RabbitMQClient,
 } from "@taskify/backend-common";
-import {
-  AddUsersToListInput,
-  ApiList,
-  ListUser,
-} from "@taskify/shared-service-types";
+import { ApiList, ListUser } from "@taskify/shared-service-types";
 import * as listService from "../services/list-service";
 import { validateUserInvitedAndPermission } from "../util";
 import { AddUserToListQuery } from "../services/types";
@@ -102,9 +99,12 @@ export async function createList(
   next: NextFunction
 ) {
   try {
+    const client = new RabbitMQClient();
+    const topic = await client.topic("collection:created");
     const { name, meta } = req.body;
 
     const list = await listService.createList(req.userId!, { name, meta });
+    await topic.publishMessage({ list });
     res.status(200).json(list);
   } catch (error) {
     if (error instanceof DatabaseError) {
