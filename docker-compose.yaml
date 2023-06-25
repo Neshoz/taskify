@@ -24,6 +24,27 @@ services:
         condition: service_healthy
       db-migrate:
         condition: service_completed_successfully
+      rabbitmq:
+        condition: service_healthy
+
+  webhook-service:
+    container_name: webhook-service
+    env_file:
+      - ./packages/webhook-service/.env
+    build:
+      context: .
+      dockerfile: ./packages/webhook-service/Dockerfile
+    ports:
+      - 8003:8003
+    volumes:
+      - ./packages/webhook-service:/usr/app/packages/webhook-service
+    depends_on:
+      postgres:
+        condition: service_healthy
+      db-migrate:
+        condition: service_completed_successfully
+      rabbitmq:
+        condition: service_healthy
 
   collection-service:
     container_name: collection-service
@@ -41,6 +62,26 @@ services:
         condition: service_healthy
       db-migrate:
         condition: service_completed_successfully
+      rabbitmq:
+        condition: service_healthy
+
+  rabbitmq:
+    container_name: rabbitmq
+    image: rabbitmq:3-management-alpine
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+    ports:
+      - 5672:5672
+      - 15672:15672
+    volumes:
+      - ./rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "rabbitmqctl", "status"]
+      interval: 5s
+      timeout: 20s
+      retries: 5
 
   db-migrate:
     container_name: db-migrate

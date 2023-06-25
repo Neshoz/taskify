@@ -2,6 +2,7 @@ import { MdList, MdDashboard } from "react-icons/md";
 import { Link, useLocation } from "react-router-dom";
 import { Group, Header, Title, useMantineTheme } from "@mantine/core";
 import { routes } from "~/app/routes";
+import { UserAvatar } from "../UserAvatar";
 
 const items = [
   {
@@ -30,25 +31,28 @@ export const AppHeader = () => {
 
   return (
     <Header px="xl" bg="dark.6" height={60}>
-      <Group spacing="xl" h="100%">
-        {items.map((item) => (
-          <Link key={item.path} to={item.path}>
-            <Group spacing="xs" align="center">
-              {item.icon(
-                isItemActive(item.path)
-                  ? theme.colors.gray[3]
-                  : theme.colors.gray[6]
-              )}
-              <Title
-                order={5}
-                weight={500}
-                color={isItemActive(item.path) ? "gray.3" : "gray.6"}
-              >
-                {item.label}
-              </Title>
-            </Group>
-          </Link>
-        ))}
+      <Group position="apart" sx={{ position: "relative" }} h="100%">
+        <Group spacing="xl" h="100%">
+          {items.map((item) => (
+            <Link key={item.path} to={item.path}>
+              <Group spacing="xs" align="center">
+                {item.icon(
+                  isItemActive(item.path)
+                    ? theme.colors.gray[3]
+                    : theme.colors.gray[6]
+                )}
+                <Title
+                  order={5}
+                  weight={500}
+                  color={isItemActive(item.path) ? "gray.3" : "gray.6"}
+                >
+                  {item.label}
+                </Title>
+              </Group>
+            </Link>
+          ))}
+        </Group>
+        <UserAvatar />
       </Group>
     </Header>
   );
