@@ -1,6 +1,4 @@
-import { HttpClient } from "~/util";
-
-const { post } = new HttpClient("/api/account");
+import { client } from "~/api";
 
 export function login(credentials: Credentials) {
   return fetch("/api/account/signin", {
@@ -11,5 +9,5 @@ export function login(credentials: Credentials) {
 }
 
 export function logout() {
-  return post("/signout");
+  return client.post("/account/signout");
 }

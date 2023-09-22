@@ -1,11 +1,12 @@
 import { CreateTaskInput, TaskBase } from "@taskify/shared-service-types";
-import { HttpClient, toQueryParams } from "~/util";
+import { toQueryParams } from "~/util";
+import { client } from "~/api";
 import { TaskFilters, UpdateTaskVariables } from "./types";
 
-const { get, post, put, delete: del } = new HttpClient("/api/collection");
-
 export function fetchListTasks(listId: string, filters?: Partial<TaskFilters>) {
-  return get<TaskBase[]>(`/lists/${listId}/tasks${toQueryParams(filters)}`);
+  return client.get<TaskBase[]>(
+    `/collections/${listId}/tasks${toQueryParams(filters)}`
+  );
 }
 
 export function createTask({ listId, ...body }: CreateTaskInput) {
@@ -13,14 +14,16 @@ export function createTask({ listId, ...body }: CreateTaskInput) {
     ...body,
     dueDate: body.dueDate ? new Date(body.dueDate).toISOString() : null,
   };
-  return post<TaskBase>(`/lists/${listId}/tasks`, payload);
+  return client.post<TaskBase>(`/collections/${listId}/tasks`, payload);
 }
 
 export function updateTask(input: UpdateTaskVariables) {
   const { listId, taskId, ...body } = input;
-  return put<TaskBase>(`/lists/${listId}/tasks/${taskId}`, body);
+  return client.put<TaskBase>(`/collections/${listId}/tasks/${taskId}`, body);
 }
 
 export function deleteTask(listId: string, taskId: string) {
-  return del<{ success: boolean }>(`/lists/${listId}/tasks/${taskId}`);
+  return client.delete<{ success: boolean }>(
+    `/collections/${listId}/tasks/${taskId}`
+  );
 }

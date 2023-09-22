@@ -4,13 +4,14 @@ import { accountServiceClient } from "../clients";
 import { AuthenticationError } from "../errors";
 import { ApiRequest } from "../types";
 
-const skipPaths = ["/signin", "/signup", "/signout"];
+const skipPaths = ["/account/signin", "/account/signup", "/account/signout"];
 
 export async function authMiddleware(
   req: ApiRequest,
   res: Response,
   next: NextFunction
 ) {
+  console.log(req.path);
   if (skipPaths.includes(req.path)) {
     return next();
   }

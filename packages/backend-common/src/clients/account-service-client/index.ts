@@ -6,7 +6,7 @@ const client = new ServiceClient("http://account-service:8001");
 
 async function getSession(headers: IncomingHttpHeaders) {
   return client.get<{ userId: string; sessionId: string }>({
-    path: "/validate-session",
+    path: "/account/validate-session",
     headers,
   });
 }
@@ -19,7 +19,7 @@ export function getUsers({
   users: string[];
 }) {
   return client.post<ApiUser[]>({
-    path: "/users/search",
+    path: "/account/users/search",
     headers,
     body: { users },
   });
@@ -33,7 +33,7 @@ export function searchUsers({
   searchTerm: string;
 }) {
   return client.get<ApiUser[]>({
-    path: `/users/search?term=${searchTerm}`,
+    path: `/account/users/search?term=${searchTerm}`,
     headers,
   });
 }

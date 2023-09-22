@@ -1,7 +1,7 @@
 import { AuthenticationError } from "@taskify/backend-common";
 import { NextFunction, Request, Response } from "express";
 
-const skipPaths = ["/signin", "/signup", "/signout"];
+const skipPaths = ["/account/signin", "/account/signup", "/account/signout"];
 
 export async function authMiddleware(
   req: Request,

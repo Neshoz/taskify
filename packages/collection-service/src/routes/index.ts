@@ -5,33 +5,33 @@ import * as taskController from "../controllers/task-controller";
 const router = express.Router();
 
 router
-  .route("/lists")
+  .route("/collections")
   .get(listController.getLists)
   .post(listController.createList);
 
 router
-  .route("/lists/:listId")
+  .route("/collections/:listId")
   .get(listController.getList)
   .put(listController.updateList)
   .delete(listController.deleteList);
 
 router
-  .route("/lists/:listId/users")
+  .route("/collections/:listId/users")
   .get(listController.getListUsers)
   .post(listController.addUserToList);
 
 router
-  .route("/lists/:listId/users/:userId")
+  .route("/collections/:listId/users/:userId")
   .put(listController.updateListUser)
   .delete(listController.deleteUserFromList);
 
 router
-  .route("/lists/:listId/tasks")
+  .route("/collections/:listId/tasks")
   .get(taskController.getTasks)
   .post(taskController.createTask);
 
 router
-  .route("/lists/:listId/tasks/:taskId")
+  .route("/collections/:listId/tasks/:taskId")
   .put(taskController.updateTask)
   .delete(taskController.deleteTask);
 
