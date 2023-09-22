@@ -1,15 +1,10 @@
 import { ApiUser } from "@taskify/shared-service-types";
-import { HttpClient } from "~/util";
-
-const { get } = new HttpClient("/api/account");
+import { client } from "~/api";
 
 export function fetchCurrentUser() {
-  return get<ApiUser>("/me");
+  return client.get<ApiUser>("/account/me");
 }
 
 export function searchUsers(searchTerm: string) {
-  if (!searchTerm) {
-    return Promise.resolve([]);
-  }
-  return get<ApiUser[]>(`/users/search?term=${searchTerm}`);
+  return client.get<ApiUser[]>(`/account/users/search?term=${searchTerm}`);
 }

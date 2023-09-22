@@ -2,41 +2,38 @@ import {
   AddUsersToListInput,
   ApiList,
   CreateListInput,
-  ListPermission,
   ListUser,
   UpdateListUserPermissionsResponse,
 } from "@taskify/shared-service-types";
-import { HttpClient } from "~/util";
+import { client } from "~/api";
 import {
   RemoveListUserVariables,
   UpdateListUserPermissionsVariables,
   UpdateListVariables,
 } from "./types";
 
-const { get, post, put, delete: del } = new HttpClient("/api/collection");
-
 export function fetchUserLists() {
-  return get<ApiList[]>("/lists");
+  return client.get<ApiList[]>("/collections");
 }
 
 export function fetchList(listId: string) {
-  return get<ApiList>(`/lists/${listId}`);
+  return client.get<ApiList>(`/collections/${listId}`);
 }
 
 export function fetchListUsers(listId: string) {
-  return get<ListUser[]>(`/lists/${listId}/users`);
+  return client.get<ListUser[]>(`/collections/${listId}/users`);
 }
 
 export function createList(input: CreateListInput) {
-  return post<ApiList>(`/lists`, input);
+  return client.post<ApiList>(`/collections`, input);
 }
 
 export function updateList({ listId, name }: UpdateListVariables) {
-  return put<ApiList>(`/lists/${listId}`, { name });
+  return client.put<ApiList>(`/collections/${listId}`, { name });
 }
 
 export function addUserToList(listId: string, user: AddUsersToListInput) {
-  return post<AddUsersToListInput>(`/lists/${listId}/users`, user);
+  return client.post<AddUsersToListInput>(`/collections/${listId}/users`, user);
 }
 
 export function updateListUserPermissions({
@@ -44,12 +41,12 @@ export function updateListUserPermissions({
   userId,
   permissions,
 }: UpdateListUserPermissionsVariables) {
-  return put<UpdateListUserPermissionsResponse>(
-    `/lists/${listId}/users/${userId}`,
+  return client.put<UpdateListUserPermissionsResponse>(
+    `/collections/${listId}/users/${userId}`,
     { permissions }
   );
 }
 
 export function removeListUser({ listId, userId }: RemoveListUserVariables) {
-  return del(`/lists/${listId}/users/${userId}`);
+  return client.delete(`/collections/${listId}/users/${userId}`);
 }

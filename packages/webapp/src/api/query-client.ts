@@ -23,6 +23,8 @@ export const queryClient = new QueryClient({
       },
     },
     queries: {
+      staleTime: Infinity,
+      cacheTime: Infinity,
       refetchOnWindowFocus: false,
       retry: (failureCount: number, error: any) => {
         if (isAuthenticationError(error)) {

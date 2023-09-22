@@ -5,13 +5,13 @@ import * as userController from "../controllers/user-controller";
 const router = express.Router();
 
 // Auth
-router.post("/signin", authController.signInUser);
-router.get("/validate-session", authController.getSession);
+router.post("/account/signin", authController.signInUser);
+router.get("/account/validate-session", authController.getSession);
 
 // User
-router.get("/me", userController.getSessionUser);
+router.get("/account/me", userController.getSessionUser);
 router
-  .route("/users/search")
+  .route("/account/users/search")
   .get(userController.searchUsers)
   .post(userController.getUsersByIds);
 

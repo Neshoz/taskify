@@ -12,5 +12,7 @@ export function useCurrentUserQuery() {
 }
 
 export function useSearchUsersQuery(searchTerm: string) {
-  return useQuery([searchTerm], () => searchUsers(searchTerm));
+  return useQuery([searchTerm], () => searchUsers(searchTerm), {
+    enabled: !!searchTerm,
+  });
 }
