@@ -108,6 +108,7 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
+
   pgadmin:
     image: dpage/pgadmin4
     container_name: pgadmin

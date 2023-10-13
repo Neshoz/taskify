@@ -11,7 +11,6 @@ export async function authMiddleware(
   res: Response,
   next: NextFunction
 ) {
-  console.log(req.path);
   if (skipPaths.includes(req.path)) {
     return next();
   }
